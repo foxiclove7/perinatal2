@@ -9,9 +9,10 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f0eb;
-            color: #2c3e50;
+            color: #18c9a9;
             padding: 20px;
             line-height: 1.6;
+            font-size: 18px;
         }
         .container {
             max-width: 900px;
@@ -55,8 +56,8 @@
         .question label {
             display: block;
             font-weight: 600;
-            margin-bottom: 6px;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 17px;
         }
         .question .sub {
             font-weight: 400;
@@ -67,8 +68,8 @@
         }
         .options {
             display: flex;
-            flex-wrap: wrap;
-            gap: 4px 12px;
+            flex-wrap: column;
+            gap: 6px 0;
             padding-left: 5px;
         }
         .options label {
@@ -181,6 +182,23 @@
             .options { gap: 3px 6px; }
             .options label { font-size: 12px; }
         }
+          /* Стили для шагов */
+.step-page { display: none; }
+.step-page.active { display: block; }
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ddd;
+    display: inline-block;
+    transition: background 0.3s;
+}
+.dot.active { background: #b8957a; }
+.dot.done { background: #9e7f66; }
+
+.btn-step:hover { opacity: 0.8; }
+.btn-step:disabled { opacity: 0.4; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -190,6 +208,25 @@
     <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
 
     <form id="surveyForm">
+                <!-- ============================================================ -->
+        <!-- НАВИГАЦИЯ (ШАГИ) -->
+        <!-- ============================================================ -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 15px; background: #f8f4f0; border-radius: 10px;">
+            <div>
+                <span style="font-weight: 700; color: #b8957a;">Шаг <span id="stepNumber">1</span> из 5</span>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button type="button" id="prevStep" class="btn-step" style="background: #ddd; color: #333; padding: 8px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 600;">◀ Назад</button>
+                <button type="button" id="nextStep" class="btn-step" style="background: #b8957a; color: white; padding: 8px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 600;">Далее ▶</button>
+            </div>
+        </div>
+        <div id="stepIndicator" style="display: flex; gap: 8px; margin-bottom: 20px; justify-content: center;">
+            <span class="dot active" data-step="1"></span>
+            <span class="dot" data-step="2"></span>
+            <span class="dot" data-step="3"></span>
+            <span class="dot" data-step="4"></span>
+            <span class="dot" data-step="5"></span>
+        </div>
 
         <!-- ============================================================ -->
         <!-- СОГЛАСИЕ НА УЧАСТИЕ -->
@@ -208,8 +245,9 @@
         <!-- АНКЕТА -->
         <!-- ============================================================ -->
         <div class="section">
-            <h2>📝 Анкета</h2>
-
+                    <div class="step-page active" data-step="1">
+            <div class="section">
+                <h2>📝 Анкета</h2>
             <div class="question">
                 <label>1. Ваши фамилия, имя, отчество (для внутренней нумерации, конфиденциально):</label>
                 <input type="text" id="fio" placeholder="Например: Иванова Анна Петровна" required>
@@ -272,11 +310,16 @@
                 </div>
             </div>
         </div>
+        </div>
+        </div>
 
         <!-- ============================================================ -->
         <!-- МЕТОДИКА ТОБ -->
         <!-- ============================================================ -->
         <div class="section">
+            <div class="step-page" data-step="2">
+            <div class="section">
+                <h2>📊 Тест отношений беременной (ТОБ)</h2>
             <h2>📊 Тест отношений беременной (ТОБ)</h2>
             <p style="color:#666; margin-bottom:15px; font-size:14px;">Просим Вас из пяти утверждений, представленных в каждом блоке, выбрать одно, наиболее полно отражающее Ваше состояние.</p>
 
@@ -385,12 +428,16 @@
                 </div>
             </div>
         </div>
+        </div>
+        </div>
 
         <!-- ============================================================ -->
         <!-- МЕТОДИКА MAAS -->
         <!-- ============================================================ -->
         <div class="section">
-            <h2>🤰 Шкала пренатальной привязанности (MAAS)</h2>
+            <div class="step-page" data-step="3">
+            <div class="section">
+                <h2>📊 Шкала пренатальной привязанности (MAAS)</h2>
             <p style="color:#666; margin-bottom:15px; font-size:14px;">Ниже представлены вопросы, касающиеся Ваших мыслей и чувств о Вашем развивающемся внутриутробно ребенке. Пожалуйста, выберите только один ответ на каждый вопрос.</p>
 
             <div class="question">
@@ -602,12 +649,16 @@
                 </div>
             </div>
         </div>
+        </div>
+        </div>
 
         <!-- ============================================================ -->
         <!-- МЕТОДИКА ШРО -->
         <!-- ============================================================ -->
         <div class="section">
-            <h2>🕊️ Шкала религиозной ориентации (ШРО)</h2>
+                    <div class="step-page" data-step="4">
+            <div class="section">
+            <h2>📊 Шкала религиозной ориентации (ШРО)</h2>
             <p style="color:#666; margin-bottom:15px; font-size:14px;">Оцените, насколько Вы согласны с каждым утверждением.</p>
 
             <div class="question">
@@ -810,9 +861,19 @@
                 </div>
             </div>
         </div>
+        </div>
+        </div>
 
         <!-- Кнопка отправки -->
-        <button type="submit" class="btn" id="submitBtn">📩 Отправить ответы</button>
+         <div class="step-page" data-step="5">
+            <div class="section" style="text-align: center; padding: 40px 20px;">
+                <h2 style="font-size: 28px;">✅ Готово!</h2>
+                <p style="font-size: 18px; margin: 20px 0;">Вы ответили на все вопросы.</p>
+                <p style="font-size: 16px; color: #666;">Нажмите кнопку ниже, чтобы отправить ответы.</p>
+                <div style="font-size: 48px; margin: 20px 0;">📩Отправить</div>
+                <button type="submit" class="btn" id="submitBtn" style="max-width: 400px; margin: 0 auto;">📩 Отправить ответы</button>
+            </div>
+        </div>
         <div id="status" class="status"></div>
         <div class="note">* Все данные анонимны и будут использованы только в обобщенном виде. Время заполнения ~ 20–25 минут.</div>
 
@@ -1137,7 +1198,82 @@
             btn.textContent = '📩 Отправить ответы';
         });
     });
-</script>
+     // ================================================================
+    // НАВИГАЦИЯ ПО СТРАНИЦАМ
+    // ================================================================
+    let currentStep = 1;
+    const totalSteps = 5;
 
+    const stepPages = document.querySelectorAll('.step-page');
+    const dots = document.querySelectorAll('.dot');
+    const stepNumber = document.getElementById('stepNumber');
+    const prevBtn = document.getElementById('prevStep');
+    const nextBtn = document.getElementById('nextStep');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function updateSteps() {
+        // Показываем нужную страницу
+        stepPages.forEach((page, index) => {
+            page.classList.toggle('active', index + 1 === currentStep);
+        });
+
+        // Обновляем точки
+        dots.forEach((dot, index) => {
+            const step = index + 1;
+            dot.classList.remove('active', 'done');
+            if (step === currentStep) dot.classList.add('active');
+            else if (step < currentStep) dot.classList.add('done');
+        });
+
+        // Обновляем номер шага
+        stepNumber.textContent = currentStep;
+
+        // Кнопки
+        prevBtn.disabled = currentStep === 1;
+        if (currentStep === totalSteps) {
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'block';
+        } else {
+            nextBtn.style.display = 'inline-block';
+            submitBtn.style.display = 'none';
+        }
+
+        // Прокрутка вверх
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Вперед
+    nextBtn.addEventListener('click', function() {
+        if (currentStep < totalSteps) {
+            currentStep++;
+            updateSteps();
+        }
+    });
+
+    // Назад
+    prevBtn.addEventListener('click', function() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateSteps();
+        }
+    });
+
+    // Клик по точкам для навигации
+    dots.forEach((dot) => {
+        dot.addEventListener('click', function() {
+            const step = parseInt(this.dataset.step);
+            if (step >= 1 && step <= totalSteps) {
+                currentStep = step;
+                updateSteps();
+            }
+        });
+    });
+
+    // Инициализация
+    updateSteps();
+
+    // Скрываем кнопку отправки на первых шагах
+    submitBtn.style.display = 'none';
+</script>
 </body>
 </html>
