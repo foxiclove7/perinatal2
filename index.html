@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Исследование отношения к беременности</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f0eb;
+            color: #2c3e50;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+        h1 {
+            font-size: 24px;
+            color: #1a2a3a;
+            border-bottom: 3px solid #d4b8a0;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 18px;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            color: #4a3a2a;
+            background: #f8f4f0;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border-left: 4px solid #b8957a;
+        }
+        h3 {
+            font-size: 15px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            color: #5a4a3a;
+        }
+        .section { margin-bottom: 30px; }
+        .question {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0ece8;
+        }
+        .question:last-child { border-bottom: none; }
+        .question label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .question .sub {
+            font-weight: 400;
+            font-size: 12px;
+            color: #888;
+            display: block;
+            margin-top: 2px;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+            padding-left: 5px;
+        }
+        .options label {
+            font-weight: 400;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: flex-start;
+            gap: 4px;
+            cursor: pointer;
+            padding: 2px 0;
+        }
+        .options input[type="radio"] {
+            accent-color: #b8957a;
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .options-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px 6px;
+        }
+        .options-row label {
+            font-weight: 400;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            cursor: pointer;
+        }
+        .options-row input[type="radio"] {
+            accent-color: #b8957a;
+            width: 14px;
+            height: 14px;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border 0.2s;
+        }
+        input:focus, select:focus {
+            border-color: #b8957a;
+            outline: none;
+        }
+        .btn {
+            background: #b8957a;
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background 0.2s;
+            margin-top: 20px;
+        }
+        .btn:hover { background: #9e7f66; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .progress { background: #eee; border-radius: 20px; height: 6px; margin-bottom: 25px; }
+        .progress-bar { background: #b8957a; height: 6px; border-radius: 20px; width: 0%; transition: width 0.3s; }
+        .status { margin-top: 15px; padding: 12px; border-radius: 8px; display: none; }
+        .status.success { display: block; background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .status.error { display: block; background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+        .note {
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        .consent-box {
+            background: #f8f4f0;
+            border: 2px solid #d4b8a0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .consent-box label {
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .consent-box input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #b8957a;
+            flex-shrink: 0;
+        }
+        .block-label {
+            font-weight: 700;
+            font-size: 16px;
+            color: #4a3a2a;
+            background: #f0e8e0;
+            padding: 4px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .options { gap: 3px 6px; }
+            .options label { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <h1>📋 Исследование отношения к беременности</h1>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+    <form id="surveyForm">
+
+        <!-- ============================================================ -->
+        <!-- СОГЛАСИЕ НА УЧАСТИЕ -->
+        <!-- ============================================================ -->
+        <div class="section">
+            <h2>📄 Информированное согласие</h2>
+            <div class="consent-box">
+                <label>
+                    <input type="checkbox" id="consent" required>
+                    Я ознакомлена с целями исследования, даю добровольное согласие на участие и обработку моих анонимных данных в научных целях. Я подтверждаю, что мне исполнилось 18 лет, и я нахожусь на сроке беременности от 12 до 40 недель.
+                </label>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- АНКЕТА -->
+        <!-- ============================================================ -->
+        <div class="section">
+            <h2>📝 Анкета</h2>
+
+            <div class="question">
+                <label>1. Ваши фамилия, имя, отчество (для внутренней нумерации, конфиденциально):</label>
+                <input type="text" id="fio" placeholder="Например: Иванова Анна Петровна" required>
+            </div>
+
+            <div class="question">
+                <label>2. Ваш возраст (полных лет):</label>
+                <input type="number" id="age" min="18" max="45" required>
+            </div>
+
+            <div class="question">
+                <label>3. Город проживания:</label>
+                <input type="text" id="city" placeholder="Например: Москва" required>
+            </div>
+
+            <div class="question">
+                <label>4. Ваше семейное положение:</label>
+                <div class="options">
+                    <label><input type="radio" name="marital_status" value="registered" required> В зарегистрированном браке</label>
+                    <label><input type="radio" name="marital_status" value="civil"> В гражданском браке</label>
+                    <label><input type="radio" name="marital_status" value="not_married"> Не замужем</label>
+                    <label><input type="radio" name="marital_status" value="divorced"> Разведена / вдова</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>5. Финансовое положение семьи (на одного члена семьи в месяц):</label>
+                <div class="options">
+                    <label><input type="radio" name="income" value="below_average" required> Ниже среднего</label>
+                    <label><input type="radio" name="income" value="average"> Средний</label>
+                    <label><input type="radio" name="income" value="above_average"> Выше среднего</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>6. Сколько у Вас уже есть живых детей?</label>
+                <div class="options">
+                    <label><input type="radio" name="children_alive" value="0" required> 0</label>
+                    <label><input type="radio" name="children_alive" value="1"> 1</label>
+                    <label><input type="radio" name="children_alive" value="2"> 2</label>
+                    <label><input type="radio" name="children_alive" value="3"> 3 и более</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>7. Текущий срок беременности (недель):</label>
+                <input type="number" id="gestation_weeks" min="12" max="42" required>
+            </div>
+
+            <div class="question">
+                <label>8. Ваше вероисповедание:</label>
+                <div class="options">
+                    <label><input type="radio" name="denomination" value="orthodox" required> Православие</label>
+                    <label><input type="radio" name="denomination" value="protestant_baptist"> Протестантизм (баптист)</label>
+                    <label><input type="radio" name="denomination" value="protestant_other"> Протестантизм (другое)</label>
+                    <label><input type="radio" name="denomination" value="catholic"> Католицизм</label>
+                    <label><input type="radio" name="denomination" value="islam"> Ислам</label>
+                    <label><input type="radio" name="denomination" value="other"> Другое</label>
+                    <label><input type="radio" name="denomination" value="none"> Никакое / атеизм</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- МЕТОДИКА ТОБ -->
+        <!-- ============================================================ -->
+        <div class="section">
+            <h2>📊 Тест отношений беременной (ТОБ)</h2>
+            <p style="color:#666; margin-bottom:15px; font-size:14px;">Просим Вас из пяти утверждений, представленных в каждом блоке, выбрать одно, наиболее полно отражающее Ваше состояние.</p>
+
+            <h3>Блок А</h3>
+
+            <div class="question">
+                <label><span class="block-label">А.I</span> Отношение к беременности:</label>
+                <div class="options">
+                    <label><input type="radio" name="tob_A_I" value="1"> Ничто не доставляет мне такого счастья, как сознание того, что я беременна</label>
+                    <label><input type="radio" name="tob_A_I" value="2"> Я не испытываю никаких особых эмоций, связанных с тем, что я беременна</label>
+                    <label><input type="radio" name="tob_A_I" value="3"> С тех пор, как я узнала, что беременна, я нахожусь в нервном напряжении</label>
+                    <label><input type="radio" name="tob_A_I" value="4"> В основном, мне приятно сознавать, что я беременна</label>
+                    <label><input type="radio" name="tob_A_I" value="5"> Я очень расстроена тем, что беременна</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label><span class="block-label">А.II</span> Отношение к образу жизни:</label>
+                <div class="options">
+                    <label><input type="radio" name="tob_A_II" value="1"> Беременность заставила меня полностью изменить образ жизни</label>
+                    <label><input type="radio" name="tob_A_II" value="2"> Беременность не заставила меня существенно изменить образ жизни, но я стала кое в чём себя ограничивать</label>
+                    <label><input type="radio" name="tob_A_II" value="3"> Беременность я не считаю поводом для того, чтобы менять образ жизни</label>
+                    <label><input type="radio" name="tob_A_II" value="4"> Беременность так изменила образ моей жизни, что она стала прекрасной</label>
+                    <label><input type="radio" name="tob_A_II" value="5"> Беременность заставила меня отказаться от многих планов, теперь не суждено сбыться многим моим надеждам</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label><span class="block-label">А.III</span> Отношение к родам:</label>
+                <div class="options">
+                    <label><input type="radio" name="tob_A_III" value="1"> Я стараюсь вообще не думать ни о беременности, ни о предстоящих родах</label>
+                    <label><input type="radio" name="tob_A_III" value="2"> Я постоянно думаю о родах, очень их боюсь</label>
+                    <label><input type="radio" name="tob_A_III" value="3"> Я думаю, что во время родов всё смогу сделать правильно и не испытываю особого страха перед ними</label>
+                    <label><input type="radio" name="tob_A_III" value="4"> Когда я задумываюсь о предстоящих родах, настроение у меня ухудшается, так как я не сомневаюсь в плохом исходе</label>
+                    <label><input type="radio" name="tob_A_III" value="5"> Я думаю о родах, как о предстоящем празднике</label>
+                </div>
+            </div>
+
+            <h3>Блок Б</h3>
+
+            <div class="question">
+                <label><span class="block-label">Б.I</span> Отношение к себе как к матери:</label>
+                <div class="options">
+                    <label><input type="radio" name="tob_B_I" value="1"> Я сомневаюсь в том, что смогу справляться с обязанностями матери</label>
+                    <label><input type="radio" name="tob_B_I" value="2"> Я считаю, что не смогу стать хорошей матерью</label>
+                    <label><input type="radio" name="tob_B_I" value="3"> Я не задумываюсь о предстоящем материнстве</label>
+                    <label><input type="radio" name="tob_B_I" value="4"> Я уверена, что стану прекрасной матерью</label>
+                    <label><input type="radio" name="tob_B_I" value="5"> Я полагаю, что если постараюсь, то смогу стать хорошей матерью</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label><span class="block-label">Б.II</span> Отношение к ребёнку:</label>
+                <div class="options">
+                    <label><input type="radio" name="tob_B_II" value="1"> Я часто с удовольствием представляю себе ребёнка, которого вынашиваю, разговариваю с ним</label>
+                    <label><input type="radio" name="tob_B_II" value="2"> Я понимаю ребёнка, которого вынашиваю, восхищаюсь им и считаю, что он знает и понимает всё, о чём я думаю</label>
+                    <label><input type="radio" name="tob_B_II" value="3"> Я постоянно беспокоюсь о состоянии здоровья ребёнка, которого вынашиваю, стараюсь его почувствовать</label>
+                    <label><input type="radio" name="tob_B_II" value="4"> Я не думаю о том, каким будет ребёнок, которого вынашиваю</label>
+                    <label><input type="radio" name="tob_B_II" value="5"> Я часто думаю о том, что ребёнок, которого вынашиваю, будет каким-нибудь неполноценным, и очень боюсь этого</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label><span class="block-label">Б.III</span> Отношение к грудному вскармливанию:</label>
+                <div class="options">
+                    <label><input type="radio" name="tob_B_III" value="1"> Я не думаю о том, как буду кормить ребёнка грудью</label>
+                    <label><input type="radio" name="tob_B_III" value="2"> Я с восторгом представляю себе, как буду кормить ребёнка грудью</label>
+                    <label><input type="radio" name="tob_B_III" value="3"> Я думаю, что буду кормить ребёнка грудью</label>
+                    <label><input type="radio" name="tob_B_III" value="4"> Я беспокоюсь о том, что у меня будут проблемы с кормлением грудью</label>
+                    <label><input type="radio" name="tob_B_III" value="5"> Я сомневаюсь в том, что смогу справляться с обязанностями матери</label>
+                </div>
+            </div>
+
+            <h3>Блок В</h3>
+
+            <div class="question">
+                <label><span class="block-label">В.I</span> Отношение к мужу (отцу ребёнка):</label>
+                <div class="options">
+                    <label><input type="radio" name="tob_C_I" value="1"> Считаю, что беременность сделала меня ещё прекрасней в глазах отца моего ребёнка</label>
+                    <label><input type="radio" name="tob_C_I" value="2"> Моя беременность никак не изменила отношения ко мне отца моего ребёнка</label>
+                    <label><input type="radio" name="tob_C_I" value="3"> Из-за беременности отец моего ребёнка стал внимательнее и теплее относиться ко мне</label>
+                    <label><input type="radio" name="tob_C_I" value="4"> Из-за беременности я стала некрасивой, и отец моего ребёнка стал холоднее относиться ко мне</label>
+                    <label><input type="radio" name="tob_C_I" value="5"> Боюсь, что изменения, связанные с беременностью, могут ухудшить отношение ко мне отца моего ребёнка</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label><span class="block-label">В.II</span> Отношение к близким людям:</label>
+                <div class="options">
+                    <label><input type="radio" name="tob_C_II" value="1"> Большинство близких мне людей разделяют мою радость по поводу беременности, и мне хорошо с ними</label>
+                    <label><input type="radio" name="tob_C_II" value="2"> Не все близкие мне люди достаточно рады тому, что я беременна, не все понимают, что я теперь нуждаюсь в особом отношении</label>
+                    <label><input type="radio" name="tob_C_II" value="3"> Большинство близких мне людей не одобряют то, что я беременна, мои отношения с ними ухудшились</label>
+                    <label><input type="radio" name="tob_C_II" value="4"> Меня мало интересует отношение к моей беременности даже близких мне людей</label>
+                    <label><input type="radio" name="tob_C_II" value="5"> Некоторые близкие мне люди относятся к моей беременности неоднозначно, и это меня тревожит</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label><span class="block-label">В.III</span> Отношение к посторонним людям:</label>
+                <div class="options">
+                    <label><input type="radio" name="tob_C_III" value="1"> Мне всегда мучительно стыдно, когда окружающие замечают, что я «в положении»</label>
+                    <label><input type="radio" name="tob_C_III" value="2"> Мне немного не по себе, когда окружающие замечают, что я «в положении»</label>
+                    <label><input type="radio" name="tob_C_III" value="3"> Мне приятно, когда окружающие замечают, что я «в положении»</label>
+                    <label><input type="radio" name="tob_C_III" value="4"> Мне наплевать, замечают окружающие или нет, что я «в положении»</label>
+                    <label><input type="radio" name="tob_C_III" value="5"> Я не испытываю особой неловкости, если окружающие замечают, что я «в положении»</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- МЕТОДИКА MAAS -->
+        <!-- ============================================================ -->
+        <div class="section">
+            <h2>🤰 Шкала пренатальной привязанности (MAAS)</h2>
+            <p style="color:#666; margin-bottom:15px; font-size:14px;">Ниже представлены вопросы, касающиеся Ваших мыслей и чувств о Вашем развивающемся внутриутробно ребенке. Пожалуйста, выберите только один ответ на каждый вопрос.</p>
+
+            <div class="question">
+                <label>1. За прошедшие 2 недели я думала или была поглощена мыслями о ребенке внутри меня:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_1" value="5"> Почти все время</label>
+                    <label><input type="radio" name="maas_1" value="4"> Очень часто</label>
+                    <label><input type="radio" name="maas_1" value="3"> Часто</label>
+                    <label><input type="radio" name="maas_1" value="2"> Время от времени</label>
+                    <label><input type="radio" name="maas_1" value="1"> Совсем нет</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>2. В прошедшие 2 недели, когда я говорила или думала о развивающемся внутри меня ребенке, чувства, которые я испытывала, были:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_2" value="1"> Очень слабыми или их не было</label>
+                    <label><input type="radio" name="maas_2" value="2"> Достаточно слабыми</label>
+                    <label><input type="radio" name="maas_2" value="3"> Средними по выраженности</label>
+                    <label><input type="radio" name="maas_2" value="4"> Достаточно сильными</label>
+                    <label><input type="radio" name="maas_2" value="5"> Очень сильными</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>3. В прошедшие 2 недели мои чувства о моем ребенке были:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_3" value="5"> Очень позитивными</label>
+                    <label><input type="radio" name="maas_3" value="4"> Преимущественно позитивными</label>
+                    <label><input type="radio" name="maas_3" value="3"> Смешанными (смесь позитивных и негативных чувств)</label>
+                    <label><input type="radio" name="maas_3" value="2"> Преимущественно негативными</label>
+                    <label><input type="radio" name="maas_3" value="1"> Очень негативными</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>4. За прошедшие 2 недели у меня возникало желание прочитать или получить информацию о растущем ребенке. Это желание было:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_4" value="1"> Очень слабым или совсем не возникало</label>
+                    <label><input type="radio" name="maas_4" value="2"> Достаточно слабым</label>
+                    <label><input type="radio" name="maas_4" value="3"> Ни сильным, ни слабым</label>
+                    <label><input type="radio" name="maas_4" value="4"> Умеренно сильным</label>
+                    <label><input type="radio" name="maas_4" value="5"> Очень сильным</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>5. За прошедшие 2 недели я пыталась представить, как действительно выглядит сейчас мой растущий ребенок:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_5" value="5"> Почти все время</label>
+                    <label><input type="radio" name="maas_5" value="4"> Очень часто</label>
+                    <label><input type="radio" name="maas_5" value="3"> Часто</label>
+                    <label><input type="radio" name="maas_5" value="2"> Время от времени</label>
+                    <label><input type="radio" name="maas_5" value="1"> Совсем не пыталась</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>6. За прошедшие 2 недели я думала о развивающемся ребенке большей частью как о:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_6" value="5"> Настоящей личности со своими характеристиками и особенностями</label>
+                    <label><input type="radio" name="maas_6" value="4"> О ребенке, таком же, как другие дети</label>
+                    <label><input type="radio" name="maas_6" value="3"> О человеческом существе</label>
+                    <label><input type="radio" name="maas_6" value="2"> О живом существе</label>
+                    <label><input type="radio" name="maas_6" value="1"> О создании, еще в действительности не существующем</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>7. В прошедшие 2 недели я чувствовала, что благополучие ребенка внутри меня зависит от меня:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_7" value="5"> Полностью</label>
+                    <label><input type="radio" name="maas_7" value="4"> Во многом</label>
+                    <label><input type="radio" name="maas_7" value="3"> Умеренно</label>
+                    <label><input type="radio" name="maas_7" value="2"> Немного</label>
+                    <label><input type="radio" name="maas_7" value="1"> Совсем не зависит</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>8. В прошедшие 2 недели я замечала, что разговариваю с ребенком, когда я одна:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_8" value="1"> Нет, совсем не разговариваю</label>
+                    <label><input type="radio" name="maas_8" value="2"> Время от времени</label>
+                    <label><input type="radio" name="maas_8" value="3"> Часто</label>
+                    <label><input type="radio" name="maas_8" value="4"> Очень часто</label>
+                    <label><input type="radio" name="maas_8" value="5"> Почти все время, когда я одна</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>9. В прошедшие 2 недели, когда я думала (или говорила) о моем ребенке, мои мысли:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_9" value="5"> Были всегда нежными и любящими</label>
+                    <label><input type="radio" name="maas_9" value="4"> Были преимущественно нежными и любящими</label>
+                    <label><input type="radio" name="maas_9" value="3"> Были смесью нежности и раздражения</label>
+                    <label><input type="radio" name="maas_9" value="2"> Содержали немного раздражения</label>
+                    <label><input type="radio" name="maas_9" value="1"> Содержали большое количество раздражения</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>10. Представление о том, как выглядит ребенок внутри меня:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_10" value="5"> Очень четкое</label>
+                    <label><input type="radio" name="maas_10" value="4"> Довольно четкое</label>
+                    <label><input type="radio" name="maas_10" value="3"> Довольно расплывчатое</label>
+                    <label><input type="radio" name="maas_10" value="2"> Очень расплывчатое</label>
+                    <label><input type="radio" name="maas_10" value="1"> У меня совсем нет никакого представления</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>11. В течение прошедших 2 недель, когда я думала о моем ребенке, у меня возникали чувства:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_11" value="1"> Сильной грусти</label>
+                    <label><input type="radio" name="maas_11" value="2"> Умеренной грусти</label>
+                    <label><input type="radio" name="maas_11" value="3"> Смеси счастья и грусти</label>
+                    <label><input type="radio" name="maas_11" value="4"> Умеренного счастья</label>
+                    <label><input type="radio" name="maas_11" value="5"> Сильного счастья</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>12. Некоторые женщины временами бывают так раздражены ребенком внутри себя, что им кажется, что они хотят навредить ему или наказать его:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_12" value="5"> Я не могла бы представить, что я когда-либо чувствовала подобное</label>
+                    <label><input type="radio" name="maas_12" value="4"> Я могу представить, что я могла бы иногда чувствовать себя подобным образом, но на самом деле никогда не чувствовала подобное</label>
+                    <label><input type="radio" name="maas_12" value="3"> Однажды я чувствовала себя подобным образом</label>
+                    <label><input type="radio" name="maas_12" value="2"> Я чувствую себя время от времени подобным образом</label>
+                    <label><input type="radio" name="maas_12" value="1"> Я часто чувствую себя подобным образом</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>13. Последние 2 недели я чувствовала:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_13" value="1"> Сильную эмоциональную дистанцию (холодность/сдержанность) в отношении к своему ребенку</label>
+                    <label><input type="radio" name="maas_13" value="2"> Умеренную эмоциональную дистанцию в отношении к своему ребенку</label>
+                    <label><input type="radio" name="maas_13" value="3"> Слабо выраженную эмоциональную близость к своему ребенку</label>
+                    <label><input type="radio" name="maas_13" value="4"> Эмоциональную близость к своему ребенку</label>
+                    <label><input type="radio" name="maas_13" value="5"> Очень выраженную эмоциональную близость к своему ребенку</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>14. Последние 2 недели я была внимательна к тому, что я ем, чтобы быть уверенной, что ребенок получает хорошее питание:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_14" value="1"> Совсем нет</label>
+                    <label><input type="radio" name="maas_14" value="2"> Один или два раза, когда я питалась</label>
+                    <label><input type="radio" name="maas_14" value="3"> Время от времени, когда я ем</label>
+                    <label><input type="radio" name="maas_14" value="4"> Достаточно часто, когда я ем</label>
+                    <label><input type="radio" name="maas_14" value="5"> Каждый раз, когда я ем</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>15. Когда я впервые увижу своего ребенка после рождения, я почувствую:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_15" value="5"> Сильную привязанность</label>
+                    <label><input type="radio" name="maas_15" value="4"> В основном привязанность</label>
+                    <label><input type="radio" name="maas_15" value="3"> Мне может что-то не понравиться во внешности ребенка</label>
+                    <label><input type="radio" name="maas_15" value="2"> Мне не понравятся довольно многое во внешности ребенка</label>
+                    <label><input type="radio" name="maas_15" value="1"> В основном мне он не понравится</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>16. Когда мой ребенок родится, я хотела бы взять ребенка:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_16" value="5"> Сразу</label>
+                    <label><input type="radio" name="maas_16" value="4"> После того, как его завернут в пеленку</label>
+                    <label><input type="radio" name="maas_16" value="3"> После того, как его помоют</label>
+                    <label><input type="radio" name="maas_16" value="2"> Спустя несколько часов, как все успокоится</label>
+                    <label><input type="radio" name="maas_16" value="1"> На следующий день</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>17. За прошедшие две недели у меня были сновидения о беременности или ребенке:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_17" value="1"> Совсем нет</label>
+                    <label><input type="radio" name="maas_17" value="2"> Время от времени</label>
+                    <label><input type="radio" name="maas_17" value="3"> Часто</label>
+                    <label><input type="radio" name="maas_17" value="4"> Очень часто</label>
+                    <label><input type="radio" name="maas_17" value="5"> Почти каждую ночь</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>18. За прошедшие 2 недели я замечала, что ощущаю или потираю рукой внешнюю часть живота — там, где находится ребенок:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_18" value="5"> Много раз за день</label>
+                    <label><input type="radio" name="maas_18" value="4"> По крайней мере раз в день</label>
+                    <label><input type="radio" name="maas_18" value="3"> Время от времени</label>
+                    <label><input type="radio" name="maas_18" value="2"> Только раз</label>
+                    <label><input type="radio" name="maas_18" value="1"> Никогда</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>19. Если бы беременность прервалась в это время (из-за выкидыша или другого случайного события) без какой-либо боли или вреда для меня, я предполагаю, что я бы почувствовала себя:</label>
+                <div class="options">
+                    <label><input type="radio" name="maas_19" value="5"> Очень печальной</label>
+                    <label><input type="radio" name="maas_19" value="4"> Умеренно печальной</label>
+                    <label><input type="radio" name="maas_19" value="3"> Нейтрально (ни печальной, ни довольной)</label>
+                    <label><input type="radio" name="maas_19" value="2"> Довольной</label>
+                    <label><input type="radio" name="maas_19" value="1"> Очень довольной</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- МЕТОДИКА ШРО -->
+        <!-- ============================================================ -->
+        <div class="section">
+            <h2>🕊️ Шкала религиозной ориентации (ШРО)</h2>
+            <p style="color:#666; margin-bottom:15px; font-size:14px;">Оцените, насколько Вы согласны с каждым утверждением.</p>
+
+            <div class="question">
+                <label>1. Главное, что дает мне религия, — это душевный комфорт во время печалей и несчастий.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_1" value="1"> Совершенно не согласен</label>
+                    <label><input type="radio" name="relig_1" value="2"> Скорее не согласен</label>
+                    <label><input type="radio" name="relig_1" value="3"> Скорее согласен</label>
+                    <label><input type="radio" name="relig_1" value="4"> Совершенно согласен</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>2. Я хожу в церковь потому, что это помогает мне упрочить свое положение в обществе.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_2" value="1"> Совершенно неверно</label>
+                    <label><input type="radio" name="relig_2" value="2"> Скорее неверно</label>
+                    <label><input type="radio" name="relig_2" value="3"> Скорее верно</label>
+                    <label><input type="radio" name="relig_2" value="4"> Совершенно верно</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>3. Цель молитвы — обеспечить счастливую и спокойную жизнь.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_3" value="1"> Совершенно не согласен</label>
+                    <label><input type="radio" name="relig_3" value="2"> Скорее не согласен</label>
+                    <label><input type="radio" name="relig_3" value="3"> Скорее согласен</label>
+                    <label><input type="radio" name="relig_3" value="4"> Совершенно согласен</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>4. Не так важно, во что я верю, пока я веду моральную жизнь.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_4" value="1"> Совершенно не согласен</label>
+                    <label><input type="radio" name="relig_4" value="2"> Скорее не согласен</label>
+                    <label><input type="radio" name="relig_4" value="3"> Скорее согласен</label>
+                    <label><input type="radio" name="relig_4" value="4"> Совершенно согласен</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>5. Хотя я и религиозна, я стараюсь не допускать того, чтобы религиозные соображения влияли на мою повседневную жизнь.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_5" value="1"> Совершенно неверно</label>
+                    <label><input type="radio" name="relig_5" value="2"> Скорее неверно</label>
+                    <label><input type="radio" name="relig_5" value="3"> Скорее верно</label>
+                    <label><input type="radio" name="relig_5" value="4"> Совершенно верно</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>6. Главное преимущество церкви в том, что, посещая ее, можно завязывать хорошие отношения с окружающими.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_6" value="1"> Совершенно не согласен</label>
+                    <label><input type="radio" name="relig_6" value="2"> Скорее не согласен</label>
+                    <label><input type="radio" name="relig_6" value="3"> Скорее согласен</label>
+                    <label><input type="radio" name="relig_6" value="4"> Совершенно согласен</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>7. Хотя я и верующий человек, я чувствую, что в моей жизни есть множество более важных вещей.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_7" value="1"> Совершенно не согласен</label>
+                    <label><input type="radio" name="relig_7" value="2"> Скорее не согласен</label>
+                    <label><input type="radio" name="relig_7" value="3"> Скорее согласен</label>
+                    <label><input type="radio" name="relig_7" value="4"> Совершенно согласен</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>8. Я молюсь главным образом потому, что меня приучили это делать.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_8" value="1"> Совершенно неверно</label>
+                    <label><input type="radio" name="relig_8" value="2"> Скорее неверно</label>
+                    <label><input type="radio" name="relig_8" value="3"> Скорее верно</label>
+                    <label><input type="radio" name="relig_8" value="4"> Совершенно верно</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>9. Основная причина моего интереса к религии состоит в том, что церковь предлагает мне подходящие виды времяпрепровождения.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_9" value="1"> Совершенно неверно</label>
+                    <label><input type="radio" name="relig_9" value="2"> Скорее неверно</label>
+                    <label><input type="radio" name="relig_9" value="3"> Скорее верно</label>
+                    <label><input type="radio" name="relig_9" value="4"> Совершенно верно</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>10. Иногда мне приходится поступиться своими религиозными убеждениями для того, чтобы обеспечить свое социальное и экономическое благополучие.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_10" value="1"> Совершенно не согласен</label>
+                    <label><input type="radio" name="relig_10" value="2"> Скорее не согласен</label>
+                    <label><input type="radio" name="relig_10" value="3"> Скорее согласен</label>
+                    <label><input type="radio" name="relig_10" value="4"> Совершенно согласен</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>11. Основная функция молитвы — обеспечить облегчение и защиту.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_11" value="1"> Совершенно не согласен</label>
+                    <label><input type="radio" name="relig_11" value="2"> Скорее не согласен</label>
+                    <label><input type="radio" name="relig_11" value="3"> Скорее согласен</label>
+                    <label><input type="radio" name="relig_11" value="4"> Совершенно согласен</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>12. Я стараюсь, чтобы религия проникала во все мои повседневные дела.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_12" value="1"> Совершенно не согласен</label>
+                    <label><input type="radio" name="relig_12" value="2"> Скорее не согласен</label>
+                    <label><input type="radio" name="relig_12" value="3"> Скорее согласен</label>
+                    <label><input type="radio" name="relig_12" value="4"> Совершенно согласен</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>13. Довольно часто я остро осознаю присутствие Бога или Божественной Сущности.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_13" value="1"> Совершенно неверно</label>
+                    <label><input type="radio" name="relig_13" value="2"> Скорее неверно</label>
+                    <label><input type="radio" name="relig_13" value="3"> Скорее верно</label>
+                    <label><input type="radio" name="relig_13" value="4"> Совершенно верно</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>14. Мои религиозные убеждения действительно определяют мою жизненную философию.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_14" value="1"> Совершенно неверно</label>
+                    <label><input type="radio" name="relig_14" value="2"> Скорее неверно</label>
+                    <label><input type="radio" name="relig_14" value="3"> Скорее верно</label>
+                    <label><input type="radio" name="relig_14" value="4"> Совершенно верно</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>15. Те молитвы, которые я произношу, оставаясь совершенно одна, столь же осмысленны и эмоциональны, как и те, что я произношу во время службы.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_15" value="1"> Почти никогда</label>
+                    <label><input type="radio" name="relig_15" value="2"> Иногда</label>
+                    <label><input type="radio" name="relig_15" value="3"> Обычно</label>
+                    <label><input type="radio" name="relig_15" value="4"> Почти всегда</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>16. Если этому не препятствуют какие-то неизбежные обстоятельства, я посещаю церковь.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_16" value="1"> Реже, чем раз в месяц</label>
+                    <label><input type="radio" name="relig_16" value="2"> Два-три раза в месяц</label>
+                    <label><input type="radio" name="relig_16" value="3"> Примерно раз в неделю</label>
+                    <label><input type="radio" name="relig_16" value="4"> Чаще, чем раз в неделю</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>17. Если бы я вступила в церковную группу, это была бы группа по изучению Библии или социальное товарищество.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_17" value="1"> Я предпочла бы товарищество</label>
+                    <label><input type="radio" name="relig_17" value="2"> Я, видимо, предпочла бы товарищество</label>
+                    <label><input type="radio" name="relig_17" value="3"> Я, видимо, предпочла бы группу</label>
+                    <label><input type="radio" name="relig_17" value="4"> Я предпочла бы группу</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>18. Религия особенно важна для меня, потому что она дает мне ответы на многие вопросы, касающиеся смысла жизни.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_18" value="1"> Совершенно не согласен</label>
+                    <label><input type="radio" name="relig_18" value="2"> Скорее не согласен</label>
+                    <label><input type="radio" name="relig_18" value="3"> Скорее согласен</label>
+                    <label><input type="radio" name="relig_18" value="4"> Совершенно согласен</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>19. Я читаю книги, посвященные моей вере.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_19" value="1"> Никогда</label>
+                    <label><input type="radio" name="relig_19" value="2"> Изредка</label>
+                    <label><input type="radio" name="relig_19" value="3"> Время от времени</label>
+                    <label><input type="radio" name="relig_19" value="4"> Часто</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <label>20. Для меня важно проводить какое-то время в религиозных размышлениях.</label>
+                <div class="options">
+                    <label><input type="radio" name="relig_20" value="1"> Это зачастую так</label>
+                    <label><input type="radio" name="relig_20" value="2"> Иногда это так</label>
+                    <label><input type="radio" name="relig_20" value="3"> Это случается редко</label>
+                    <label><input type="radio" name="relig_20" value="4"> Такого никогда не бывает</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка отправки -->
+        <button type="submit" class="btn" id="submitBtn">📩 Отправить ответы</button>
+        <div id="status" class="status"></div>
+        <div class="note">* Все данные анонимны и будут использованы только в обобщенном виде. Время заполнения ~ 20–25 минут.</div>
+
+    </form>
+</div>
+
+<script>
+    // ================================================================
+    // НАСТРОЙКА: URL вашего Google Apps Script
+    // ================================================================
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyk5dRqomPeydwTT0ZoPJV7Bpj31wEQbBUpWZgMQ8Jrt5JDcxqIPsnCg5wa0MAGWs4r/exec';
+
+    // ================================================================
+    // ФУНКЦИИ ПОДСЧЕТА
+    // ================================================================
+
+    // --- 1. ТОБ: подсчет типов ПКГД ---
+    function calculateTOB(formData) {
+        // Собираем ответы по 9 шкалам
+        const tobAnswers = {
+            A_I: parseInt(formData.get('tob_A_I')) || 0,
+            A_II: parseInt(formData.get('tob_A_II')) || 0,
+            A_III: parseInt(formData.get('tob_A_III')) || 0,
+            B_I: parseInt(formData.get('tob_B_I')) || 0,
+            B_II: parseInt(formData.get('tob_B_II')) || 0,
+            B_III: parseInt(formData.get('tob_B_III')) || 0,
+            C_I: parseInt(formData.get('tob_C_I')) || 0,
+            C_II: parseInt(formData.get('tob_C_II')) || 0,
+            C_III: parseInt(formData.get('tob_C_III')) || 0
+        };
+
+        // Таблица ключей (О, Г, Э, Т, Д)
+        const key = {
+            A_I: { O: 4, G: 2, E: 1, T: 3, D: 5 },
+            A_II: { O: 2, G: 3, E: 4, T: 1, D: 5 },
+            A_III: { O: 3, G: 1, E: 5, T: 2, D: 4 },
+            B_I: { O: 5, G: 3, E: 4, T: 1, D: 2 },
+            B_II: { O: 1, G: 4, E: 2, T: 3, D: 5 },
+            B_III: { O: 3, G: 1, E: 2, T: 5, D: 4 },
+            C_I: { O: 3, G: 2, E: 1, T: 5, D: 4 },
+            C_II: { O: 1, G: 4, E: 2, T: 5, D: 3 },
+            C_III: { O: 5, G: 4, E: 3, T: 2, D: 1 }
+        };
+
+        const types = ['O', 'G', 'E', 'T', 'D'];
+        const scores = { O: 0, G: 0, E: 0, T: 0, D: 0 };
+
+        for (const [scale, answer] of Object.entries(tobAnswers)) {
+            if (answer === 0) continue;
+            const row = key[scale];
+            if (row) {
+                for (const type of types) {
+                    if (row[type] === answer) {
+                        scores[type] += 1;
+                    }
+                }
+            }
+        }
+
+        // Находим максимальный тип
+        let maxType = 'O';
+        let maxScore = 0;
+        for (const type of types) {
+            if (scores[type] > maxScore) {
+                maxScore = scores[type];
+                maxType = type;
+            }
+        }
+
+        return {
+            O: scores.O,
+            G: scores.G,
+            E: scores.E,
+            T: scores.T,
+            D: scores.D,
+            dominant: maxType
+        };
+    }
+
+    // --- 2. MAAS: подсчет шкал ---
+    function calculateMAAS(formData) {
+        // Собираем 19 ответов
+        const answers = [];
+        for (let i = 1; i <= 19; i++) {
+            const val = parseInt(formData.get('maas_' + i));
+            answers.push(val || 0);
+        }
+
+        // Функция для реверса (6 - значение)
+        const rev = (val) => (val === 0 ? 0 : 6 - val);
+
+        // Шкалы по ключу
+        // Качество привязанности: (3) (6) (9) (10) 11 (12) 13 (15) (16) (19)
+        const qualityItems = [3, 6, 9, 10, 11, 12, 13, 15, 16, 19];
+        let qualitySum = 0;
+        let qualityCount = 0;
+        for (const idx of qualityItems) {
+            const val = answers[idx - 1];
+            if (val > 0) {
+                // Пункты в скобках — реверс
+                const isReverse = [3, 6, 9, 10, 12, 15, 16, 19].includes(idx);
+                qualitySum += isReverse ? rev(val) : val;
+                qualityCount++;
+            }
+        }
+
+        // Поведение привязанности: (1) 2 4 (5) 8 14 17 (18)
+        const behaviorItems = [1, 2, 4, 5, 8, 14, 17, 18];
+        let behaviorSum = 0;
+        let behaviorCount = 0;
+        for (const idx of behaviorItems) {
+            const val = answers[idx - 1];
+            if (val > 0) {
+                const isReverse = [1, 5, 18].includes(idx);
+                behaviorSum += isReverse ? rev(val) : val;
+                behaviorCount++;
+            }
+        }
+
+        // Общий показатель: все 19 пунктов
+        let totalSum = 0;
+        let totalCount = 0;
+        const allReverse = [1, 3, 5, 6, 7, 9, 10, 12, 15, 16, 18, 19];
+        for (let i = 1; i <= 19; i++) {
+            const val = answers[i - 1];
+            if (val > 0) {
+                totalSum += allReverse.includes(i) ? rev(val) : val;
+                totalCount++;
+            }
+        }
+
+        // Компоненты
+        // Когнитивный: (1) 4 (5) (6) (9) (10)
+        const cognitiveItems = [1, 4, 5, 6, 9, 10];
+        let cognitiveSum = 0;
+        for (const idx of cognitiveItems) {
+            const val = answers[idx - 1];
+            if (val > 0) {
+                cognitiveSum += [1, 5, 6, 9, 10].includes(idx) ? rev(val) : val;
+            }
+        }
+
+        // Эмоциональный: 2 (3) 11 13 (15) 17 (19)
+        const emotionalItems = [2, 3, 11, 13, 15, 17, 19];
+        let emotionalSum = 0;
+        for (const idx of emotionalItems) {
+            const val = answers[idx - 1];
+            if (val > 0) {
+                emotionalSum += [3, 15, 19].includes(idx) ? rev(val) : val;
+            }
+        }
+
+        // Поведенческий: (7) 8 (12) 14 (16) (18)
+        const behavioralItems = [7, 8, 12, 14, 16, 18];
+        let behavioralSum = 0;
+        for (const idx of behavioralItems) {
+            const val = answers[idx - 1];
+            if (val > 0) {
+                behavioralSum += [7, 12, 16, 18].includes(idx) ? rev(val) : val;
+            }
+        }
+
+        // Нормализация в проценты (как в статье Савенышевой)
+        const maxQuality = 50;
+        const maxBehavior = 40;
+        const maxTotal = 95;
+        const maxCognitive = 30;
+        const maxEmotional = 35;
+        const maxBehavioral = 30;
+
+        return {
+            quality: qualitySum,
+            behavior: behaviorSum,
+            total: totalSum,
+            cognitive: Math.round((cognitiveSum / maxCognitive) * 100),
+            emotional: Math.round((emotionalSum / maxEmotional) * 100),
+            behavioral: Math.round((behavioralSum / maxBehavioral) * 100)
+        };
+    }
+
+    // --- 3. ШРО: подсчет религиозной ориентации ---
+    function calculateRelig(formData) {
+        // Внутренняя: пункты 1, 3, 4, 6, 9, 13, 14, 16, 18, 19
+        const intrinsicItems = [1, 3, 4, 6, 9, 13, 14, 16, 18, 19];
+        let intrinsicSum = 0;
+        for (const idx of intrinsicItems) {
+            const val = parseInt(formData.get('relig_' + idx));
+            if (val > 0) intrinsicSum += val;
+        }
+
+        // Внешняя: пункты 2, 5, 7, 8, 10, 11, 12, 15, 17, 20
+        const extrinsicItems = [2, 5, 7, 8, 10, 11, 12, 15, 17, 20];
+        let extrinsicSum = 0;
+        for (const idx of extrinsicItems) {
+            const val = parseInt(formData.get('relig_' + idx));
+            if (val > 0) extrinsicSum += val;
+        }
+
+        // Максимальные значения (4 балла × 10 пунктов = 40)
+        const maxScore = 40;
+        const intrinsicPercent = Math.round((intrinsicSum / maxScore) * 100);
+        const extrinsicPercent = Math.round((extrinsicSum / maxScore) * 100);
+
+        return {
+            intrinsic: intrinsicSum,
+            extrinsic: extrinsicSum,
+            intrinsicPercent: intrinsicPercent,
+            extrinsicPercent: extrinsicPercent
+        };
+    }
+
+    // --- 4. Определение группы ---
+    function determineGroup(formData) {
+        const denomination = formData.get('denomination');
+        // Для простоты: пока определяем по вероисповеданию
+        // В реальности нужно добавить критерии воцерковленности
+        if (denomination === 'orthodox') return 'orthodox';
+        if (denomination === 'protestant_baptist') return 'baptist';
+        if (denomination === 'protestant_other') return 'protestant_other';
+        if (denomination === 'catholic') return 'catholic';
+        if (denomination === 'islam') return 'islam';
+        if (denomination === 'other') return 'other';
+        return 'none';
+    }
+
+    // ================================================================
+    // ОБРАБОТКА ОТПРАВКИ
+    // ================================================================
+    document.getElementById('surveyForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const status = document.getElementById('status');
+        btn.disabled = true;
+        btn.textContent = '⏳ Отправка...';
+        status.className = 'status';
+        status.textContent = '';
+
+        // Проверка согласия
+        if (!document.getElementById('consent').checked) {
+            status.className = 'status error';
+            status.textContent = '❌ Пожалуйста, дайте согласие на участие в исследовании.';
+            btn.disabled = false;
+            btn.textContent = '📩 Отправить ответы';
+            return;
+        }
+
+        const formData = new FormData(this);
+        const data = {};
+
+        // --- Демография ---
+        data.fio = document.getElementById('fio').value.trim() || '';
+        data.age = document.getElementById('age').value || '';
+        data.city = document.getElementById('city').value.trim() || '';
+        data.marital_status = formData.get('marital_status') || '';
+        data.income = formData.get('income') || '';
+        data.children_alive = formData.get('children_alive') || '';
+        data.gestation_weeks = document.getElementById('gestation_weeks').value || '';
+        data.denomination = formData.get('denomination') || '';
+        data.consent = document.getElementById('consent').checked ? 'yes' : 'no';
+
+        // --- ТОБ: ответы ---
+        const tobKeys = ['tob_A_I', 'tob_A_II', 'tob_A_III', 'tob_B_I', 'tob_B_II', 'tob_B_III', 'tob_C_I', 'tob_C_II', 'tob_C_III'];
+        for (const key of tobKeys) {
+            data[key] = formData.get(key) || '';
+        }
+
+        // --- ТОБ: подсчет ---
+        const tobResults = calculateTOB(formData);
+        data.tob_O = tobResults.O;
+        data.tob_G = tobResults.G;
+        data.tob_E = tobResults.E;
+        data.tob_T = tobResults.T;
+        data.tob_D = tobResults.D;
+
+        // --- MAAS: ответы ---
+        for (let i = 1; i <= 19; i++) {
+            data['maas_' + i] = formData.get('maas_' + i) || '';
+        }
+
+        // --- MAAS: подсчет ---
+        const maasResults = calculateMAAS(formData);
+        data.maas_quality = maasResults.quality;
+        data.maas_behavior = maasResults.behavior;
+        data.maas_total = maasResults.total;
+        data.maas_cognitive = maasResults.cognitive;
+        data.maas_emotional = maasResults.emotional;
+        data.maas_behavioral = maasResults.behavioral;
+
+        // --- ШРО: ответы ---
+        for (let i = 1; i <= 20; i++) {
+            data['relig_' + i] = formData.get('relig_' + i) || '';
+        }
+
+        // --- ШРО: подсчет ---
+        const religResults = calculateRelig(formData);
+        data.relig_intrinsic_total = religResults.intrinsic;
+        data.relig_extrinsic_total = religResults.extrinsic;
+        data.relig_intrinsic_percent = religResults.intrinsicPercent;
+        data.relig_extrinsic_percent = religResults.extrinsicPercent;
+
+        // --- Группа ---
+        data.group = determineGroup(formData);
+
+        // --- Отправка ---
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(() => {
+            status.className = 'status success';
+            status.textContent = '✅ Спасибо! Ваши ответы успешно отправлены.';
+            btn.textContent = '✅ Отправлено';
+            btn.disabled = true;
+            document.getElementById('surveyForm').reset();
+        })
+        .catch(err => {
+            status.className = 'status error';
+            status.textContent = '❌ Ошибка отправки: ' + err.message + '. Попробуйте еще раз.';
+            btn.disabled = false;
+            btn.textContent = '📩 Отправить ответы';
+        });
+    });
+</script>
+
+</body>
+</html>
