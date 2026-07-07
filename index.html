@@ -182,6 +182,13 @@
             .options { gap: 3px 6px; }
             .options label { font-size: 12px; }
         }
+        .question-error {
+    border-left: 4px solid #c62828 !important;
+    padding-left: 12px !important;
+    background-color: #fff5f5 !important;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
     </style>
 </head>
 <body>
@@ -190,7 +197,7 @@
     <h1>📋 Исследование отношения к беременности</h1>
     <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
 
-    <form id="surveyForm">
+   <form id="surveyForm" onsubmit="return validateForm()">
 
         <!-- ============================================================ -->
         <!-- СОГЛАСИЕ НА УЧАСТИЕ -->
@@ -1028,113 +1035,190 @@
         // В реальности нужно добавить критерии воцерковленности
         if (denomination === 'orthodox') return 'orthodox';
         if (denomination === 'protestant_baptist') return 'baptist';
-        if (denomination === 'protestant_other') return 'protestant_other';
-        if (denomination === 'catholic') return 'catholic';
-        if (denomination === 'islam') return 'islam';
         if (denomination === 'other') return 'other';
         return 'none';
     }
 
+   // ================================================================
+// ОБРАБОТКА ОТПРАВКИ (с проверкой всех вопросов)
+// ================================================================
+
+document.getElementById('surveyForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const status = document.getElementById('status');
+    btn.disabled = true;
+    btn.textContent = '⏳ Отправка...';
+    status.className = 'status';
+    status.textContent = '';
+
     // ================================================================
-    // ОБРАБОТКА ОТПРАВКИ
+    // ПРОВЕРКА: все ли вопросы отмечены?
     // ================================================================
-    document.getElementById('surveyForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        const status = document.getElementById('status');
-        btn.disabled = true;
-        btn.textContent = '⏳ Отправка...';
-        status.className = 'status';
-        status.textContent = '';
+    const form = this;
+    let hasError = false;
+    let errorLabels = [];
 
-        // Проверка согласия
-        if (!document.getElementById('consent').checked) {
-            status.className = 'status error';
-            status.textContent = '❌ Пожалуйста, дайте согласие на участие в исследовании.';
-            btn.disabled = false;
-            btn.textContent = '📩 Отправить ответы';
-            return;
-        }
-
-        const formData = new FormData(this);
-        const data = {};
-
-        // --- Демография ---
-        data.fio = document.getElementById('fio').value.trim() || '';
-        data.age = document.getElementById('age').value || '';
-        data.city = document.getElementById('city').value.trim() || '';
-        data.marital_status = formData.get('marital_status') || '';
-        data.income = formData.get('income') || '';
-        data.children_alive = formData.get('children_alive') || '';
-        data.gestation_weeks = document.getElementById('gestation_weeks').value || '';
-        data.denomination = formData.get('denomination') || '';
-        data.consent = document.getElementById('consent').checked ? 'yes' : 'no';
-
-        // --- ТОБ: ответы ---
-        const tobKeys = ['tob_A_I', 'tob_A_II', 'tob_A_III', 'tob_B_I', 'tob_B_II', 'tob_B_III', 'tob_C_I', 'tob_C_II', 'tob_C_III'];
-        for (const key of tobKeys) {
-            data[key] = formData.get(key) || '';
-        }
-
-        // --- ТОБ: подсчет ---
-        const tobResults = calculateTOB(formData);
-        data.tob_O = tobResults.O;
-        data.tob_G = tobResults.G;
-        data.tob_E = tobResults.E;
-        data.tob_T = tobResults.T;
-        data.tob_D = tobResults.D;
-
-        // --- MAAS: ответы ---
-        for (let i = 1; i <= 19; i++) {
-            data['maas_' + i] = formData.get('maas_' + i) || '';
-        }
-
-        // --- MAAS: подсчет ---
-        const maasResults = calculateMAAS(formData);
-        data.maas_quality = maasResults.quality;
-        data.maas_behavior = maasResults.behavior;
-        data.maas_total = maasResults.total;
-        data.maas_cognitive = maasResults.cognitive;
-        data.maas_emotional = maasResults.emotional;
-        data.maas_behavioral = maasResults.behavioral;
-
-        // --- ШРО: ответы ---
-        for (let i = 1; i <= 20; i++) {
-            data['relig_' + i] = formData.get('relig_' + i) || '';
-        }
-
-        // --- ШРО: подсчет ---
-        const religResults = calculateRelig(formData);
-        data.relig_intrinsic_total = religResults.intrinsic;
-        data.relig_extrinsic_total = religResults.extrinsic;
-        data.relig_intrinsic_percent = religResults.intrinsicPercent;
-        data.relig_extrinsic_percent = religResults.extrinsicPercent;
-
-        // --- Группа ---
-        data.group = determineGroup(formData);
-
-        // --- Отправка ---
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        })
-        .then(() => {
-            status.className = 'status success';
-            status.textContent = '✅ Спасибо! Ваши ответы успешно отправлены.';
-            btn.textContent = '✅ Отправлено';
-            btn.disabled = true;
-            document.getElementById('surveyForm').reset();
-        })
-        .catch(err => {
-            status.className = 'status error';
-            status.textContent = '❌ Ошибка отправки: ' + err.message + '. Попробуйте еще раз.';
-            btn.disabled = false;
-            btn.textContent = 'Отправить';
-        });
+    // Сначала убираем старую подсветку
+    form.querySelectorAll('.question-error').forEach(el => el.classList.remove('question-error'));
+    form.querySelectorAll('.question').forEach(el => {
+        el.style.borderLeft = '';
+        el.style.paddingLeft = '';
+        el.style.backgroundColor = '';
     });
-</script>
+    const consentBox = document.getElementById('consent').closest('.consent-box');
+    if (consentBox) consentBox.style.border = '2px solid #d4b8a0';
 
+    // 1. Проверяем согласие
+    if (!document.getElementById('consent').checked) {
+        hasError = true;
+        errorLabels.push('Согласие на участие');
+        if (consentBox) consentBox.style.border = '2px solid #c62828';
+    }
+
+    // 2. Проверяем все radio-группы
+    const radioGroups = {};
+    form.querySelectorAll('input[type="radio"]').forEach((input) => {
+        const name = input.name;
+        if (!radioGroups[name]) radioGroups[name] = [];
+        radioGroups[name].push(input);
+    });
+
+    for (const [name, inputs] of Object.entries(radioGroups)) {
+        const isRequired = inputs.some(inp => inp.hasAttribute('required'));
+        if (isRequired) {
+            const isChecked = inputs.some(inp => inp.checked);
+            if (!isChecked) {
+                hasError = true;
+                const parent = inputs[0].closest('.question');
+                if (parent) {
+                    parent.classList.add('question-error');
+                    const label = parent.querySelector('label');
+                    if (label) {
+                        let text = label.textContent.trim().replace(/\s+/g, ' ');
+                        if (text.length > 50) text = text.substring(0, 50) + '...';
+                        errorLabels.push(text);
+                    }
+                }
+            }
+        }
+    }
+
+    // 3. Проверяем текстовые поля
+    form.querySelectorAll('input[type="text"], input[type="number"]').forEach((input) => {
+        if (input.hasAttribute('required') && !input.value.trim()) {
+            hasError = true;
+            const parent = input.closest('.question');
+            if (parent) {
+                parent.classList.add('question-error');
+                const label = parent.querySelector('label');
+                if (label) {
+                    let text = label.textContent.trim().replace(/\s+/g, ' ');
+                    if (text.length > 50) text = text.substring(0, 50) + '...';
+                    errorLabels.push(text);
+                }
+            }
+        }
+    });
+
+    // Если есть ошибки — показываем и останавливаем отправку
+    if (hasError) {
+        status.className = 'status error';
+        status.textContent = '❌ Пожалуйста, ответьте на все обязательные вопросы: ' + errorLabels.join(', ');
+        btn.disabled = false;
+        btn.textContent = '📩 Отправить ответы';
+        
+        // Скроллим к первому незаполненному
+        const firstError = form.querySelector('.question-error');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+    }
+
+    // ================================================================
+    // СБОР ДАННЫХ (если все вопросы заполнены)
+    // ================================================================
+    const formData = new FormData(this);
+    const data = {};
+
+    // --- Демография ---
+    data.fio = document.getElementById('fio').value.trim() || '';
+    data.age = document.getElementById('age').value || '';
+    data.city = document.getElementById('city').value.trim() || '';
+    data.marital_status = formData.get('marital_status') || '';
+    data.income = formData.get('income') || '';
+    data.children_alive = formData.get('children_alive') || '';
+    data.gestation_weeks = document.getElementById('gestation_weeks').value || '';
+    data.denomination = formData.get('denomination') || '';
+    data.consent = document.getElementById('consent').checked ? 'yes' : 'no';
+
+    // --- ТОБ: ответы ---
+    const tobKeys = ['tob_A_I', 'tob_A_II', 'tob_A_III', 'tob_B_I', 'tob_B_II', 'tob_B_III', 'tob_C_I', 'tob_C_II', 'tob_C_III'];
+    for (const key of tobKeys) {
+        data[key] = formData.get(key) || '';
+    }
+
+    // --- ТОБ: подсчет ---
+    const tobResults = calculateTOB(formData);
+    data.tob_O = tobResults.O;
+    data.tob_G = tobResults.G;
+    data.tob_E = tobResults.E;
+    data.tob_T = tobResults.T;
+    data.tob_D = tobResults.D;
+
+    // --- MAAS: ответы ---
+    for (let i = 1; i <= 19; i++) {
+        data['maas_' + i] = formData.get('maas_' + i) || '';
+    }
+
+    // --- MAAS: подсчет ---
+    const maasResults = calculateMAAS(formData);
+    data.maas_quality = maasResults.quality;
+    data.maas_behavior = maasResults.behavior;
+    data.maas_total = maasResults.total;
+    data.maas_cognitive = maasResults.cognitive;
+    data.maas_emotional = maasResults.emotional;
+    data.maas_behavioral = maasResults.behavioral;
+
+    // --- ШРО: ответы ---
+    for (let i = 1; i <= 20; i++) {
+        data['relig_' + i] = formData.get('relig_' + i) || '';
+    }
+
+    // --- ШРО: подсчет ---
+    const religResults = calculateRelig(formData);
+    data.relig_intrinsic_total = religResults.intrinsic;
+    data.relig_extrinsic_total = religResults.extrinsic;
+    data.relig_intrinsic_percent = religResults.intrinsicPercent;
+    data.relig_extrinsic_percent = religResults.extrinsicPercent;
+
+    // --- Группа ---
+    data.group = determineGroup(formData);
+
+    // ================================================================
+    // ОТПРАВКА
+    // ================================================================
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(() => {
+        status.className = 'status success';
+        status.textContent = '✅ Спасибо! Ваши ответы успешно отправлены.';
+        btn.textContent = '✅ Отправлено';
+        btn.disabled = true;
+        document.getElementById('surveyForm').reset();
+    })
+    .catch(err => {
+        status.className = 'status error';
+        status.textContent = '❌ Ошибка отправки: ' + err.message + '. Попробуйте еще раз.';
+        btn.disabled = false;
+        btn.textContent = '📩 Отправить ответы';
+    });
+});
+</script>
 </body>
 </html>
