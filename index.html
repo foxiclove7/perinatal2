@@ -1085,8 +1085,10 @@ document.getElementById('surveyForm').addEventListener('submit', function(e) {
     });
 
     for (const [name, inputs] of Object.entries(radioGroups)) {
-        const isRequired = inputs.some(inp => inp.hasAttribute('required'));
-        if (isRequired) {
+        // Проверяем, есть ли среди них обязательные
+        const hasRequired = inputs.some(inp => inp.hasAttribute('required'));
+        // Если хотя бы один radio в группе обязательный — проверяем всю группу
+        if (hasRequired) {
             const isChecked = inputs.some(inp => inp.checked);
             if (!isChecked) {
                 hasError = true;
@@ -1097,7 +1099,10 @@ document.getElementById('surveyForm').addEventListener('submit', function(e) {
                     if (label) {
                         let text = label.textContent.trim().replace(/\s+/g, ' ');
                         if (text.length > 50) text = text.substring(0, 50) + '...';
-                        errorLabels.push(text);
+                        // Добавляем только уникальные названия
+                        if (!errorLabels.includes(text)) {
+                            errorLabels.push(text);
+                        }
                     }
                 }
             }
