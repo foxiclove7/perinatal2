@@ -973,7 +973,7 @@
         behavioral: behavioralPercent
     };
 }
-// // --- 3. ШРО: подсчет религиозной ориентации ---
+// --- 3. ШРО: подсчет религиозной ориентации ---
 function calculateRelig(formData) {
 
     // =============================================
@@ -1256,11 +1256,17 @@ document.getElementById('surveyForm').addEventListener('submit', function(e) {
     }
 
     // --- ШРО: подсчет ---
-    const religResults = calculateRelig(formData);
-    data.relig_intrinsic_total = religResults.intrinsic;
-    data.relig_extrinsic_total = religResults.extrinsic;
-    data.relig_intrinsic_percent = religResults.intrinsicPercent;
-    data.relig_extrinsic_percent = religResults.extrinsicPercent;
+const religResults = calculateRelig(formData);
+
+data.relig_intrinsic_total = religResults.intrinsic;
+data.relig_extrinsic_total = religResults.extrinsic;
+data.relig_intrinsic_percent = religResults.intrinsicPercent;
+data.relig_extrinsic_percent = religResults.extrinsicPercent;
+
+data.relig_intrinsic_inversion = religResults.intrinsicInversion;
+data.relig_intrinsic_inversion_percent = religResults.intrinsicInversionPercent;
+data.relig_IR = religResults.religiosityIndex;
+data.relig_IR_percent = religResults.religiosityPercent;
 
     // --- Группа ---
     data.group = determineGroup(formData);
