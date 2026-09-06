@@ -1058,6 +1058,121 @@ return {
     };
 }
 
+    // --- 4. Определение группы ---
+function determineGroup(formData) {
+    const denomination = formData.get('denomination');
+
+    if (denomination === 'orthodox') return 'orthodox';
+    if (denomination === 'protestant_baptist') return 'baptist';
+    if (denomination === 'other') return 'other';
+
+    return 'none';
+}
+
+
+// ================================================================
+// ОБРАБОТКА ОТПРАВКИ (с проверкой всех вопросов)
+// ================================================================
+
+document.getElementById('surveyForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('submitBtn');
+    const status = document.getElementById('status');
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Отправка...';
+
+    status.className = 'status';
+    status.textContent = '';
+
+    // ================================================================
+    // ПРОВЕРКА: все ли вопросы отмечены?
+    // ================================================================
+
+    const form = this;
+    let hasError = false;
+    let errorLabels = [];
+
+    // Сначала убираем старую подсветку
+    form.querySelectorAll('.question-error').forEach(el =>
+        el.classList.remove('question-error')
+    );
+
+    form.querySelectorAll('.question').forEach(el => {
+        el.style.borderLeft = '';
+        el.style.paddingLeft = '';
+        el.style.backgroundColor = '';
+    });
+
+    const consentBox = document
+        .getElementById('consent')
+        .closest('.consent-box');
+
+    if (consentBox) {
+        consentBox.style.border = '2px solid #d4b8a0';
+    }
+
+    // 1. Проверяем согласие
+    if (!document.getElementById('consent').checked) {
+        hasError = true;
+        errorLabels.push('Согласие на участие');
+
+        if (consentBox) {
+            consentBox.style.border = '2px solid #c62828';
+        }
+    }
+
+    // 2. Проверяем все radio-группы
+    const radioGroups = {};
+
+    form.querySelectorAll('input[type="radio"]').forEach((input) => {
+        const name = input.name;
+
+        if (!radioGroups[name]) {
+            radioGroups[name] = [];
+        }
+
+        radioGroups[name].push(input);
+    });
+
+    for (const [name, inputs] of Object.entries(radioGroups)) {
+
+        const hasRequired = inputs.some(
+            inp => inp.hasAttribute('required')
+        );
+
+        if (hasRequired) {
+            const isChecked = inputs.some(inp => inp.checked);
+
+            if (!isChecked) {
+                hasError = true;
+
+                const parent = inputs[0].closest('.question');
+
+                if (parent) {
+                    parent.classList.add('question-error');
+
+                    const label = parent.querySelector('label');
+
+                    if (label) {
+                        let text = label.textContent
+                            .trim()
+                            .replace(/\s+/g, ' ');
+
+                        if (text.length > 50) {
+                            text = text.substring(0, 50) + '...';
+                        }
+
+                        if (!errorLabels.includes(text)) {
+                            errorLabels.push(text);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // 3. Проверяем текстовые поля
     form.querySelectorAll('input[type="text"], input[type="number"]').forEach((input) => {
         if (input.hasAttribute('required') && !input.value.trim()) {
